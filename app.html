@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AngularJS Form</title>
+  <script src="https://ajaxgoogleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+<body>
+  <div ng-app="myApp">
+    <div ng-controller="MainCtrl">
+      <table>
+        <thead>
+          <tr>
+            <th>Group Name</th>
+            <th>Group Members</th>
+            <th>Custom Group ID</th>
+            <th>Datetime Changed By</th>
+            <th>Last Updated By</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="group in groups">
+            <td>{{group.groupName}}</td>
+            <td>{{group.groupMembers}}</td>
+            <td>{{group.customGroupId}}</td>
+            <td>{{group.dateTimeChangedBy}}</td>
+            <td>{{group.lastUpdatedBy}}</td>
+            <td>
+              <button ng-click="editGroup(group)">Edit</button>
+              <button ng-click="deleteGroup(group)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <form ng-submit="save()">
+        <input type="text" ng-model="groupName" placeholder="Custom group name">
+        <select multiple ng-model="groupMembers">
+          <option value="1">Group member 1</option>
+          <option value="2">Group member 2</option>
+          <option value="3">Group member 3</option>
+        </select>
+        <input type="text" ng-model="customGroupId" placeholder="Custom group ID">
+        <input type="text" ng-model="dateTimeChangedBy" placeholder="Datetime changed by">
+        <input type="text" ng-model="lastUpdatedBy" placeholder="Last updated by">
+        <button type="submit">Save</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
