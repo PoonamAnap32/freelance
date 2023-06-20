@@ -39,6 +39,21 @@
         </tr>
       </table>
     </form>
+    <div ng-modal="modal">
+        <div ng-modal-content>
+          <h3>Success!</h3>
+          <p>The group has been saved successfully.</p>
+          <button ng-modal-close>Close</button>
+        </div>
+      </div>
+      <div ng-modal="alreadyData">
+        <div ng-modal-content>
+          <h3>Error!</h3>
+          <p>The group already exists.</p>
+          <button ng-modal-close>Close</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -51,13 +66,28 @@
         $scope.lastUpdatedBy = 'Default User';
 
         $scope.save = function() {
-          // Perform save operation
-          var data = {
-            groupName: $scope.customGroupName,
-            groupId: $scope.customGroupId,
-            dateChanged: $scope.dateAndTimeChanged,
-            updatedBy: $scope.lastUpdatedBy
-          };
+    // TODO: Save the group data
+    var group = {
+      groupName: $scope.groupName,
+      groupMembers: $scope.groupMembers,
+      customGroupId: $scope.customGroupId,
+      dateTimeChangedBy: $scope.dateTimeChangedBy,
+      lastUpdatedBy: $scope.lastUpdatedBy
+    };
+
+    // Check if the group already exists
+    var exists = false;
+    for (var i = 0; i < $scope.groups.length; i++) {
+      if ($scope.groups[i].groupName === group.groupName) {
+        exists = true;
+        break;
+      }
+    }
+
+    if (!exists) {
+      $scope.groups.push(group);
+      $scope.modal.open();
+    }
 
           $http.post('/api/custom-groups', data)
             .then(function(response) {
