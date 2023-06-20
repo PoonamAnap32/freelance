@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+  <title>AngularJS Form Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body>
+  <div ng-controller="myCtrl">
+    <h2>Custom Group Form</h2>
+
+    <form>
+      <table>
+        <tr>
+          <td>Custom Group Name:</td>
+          <td>
+            <select multiple size="5" ng-model="customGroupName" ng-options="name for name in customGroupNames"></select>
+          </td>
+        </tr>
+        <tr>
+          <td>Custom Group ID:</td>
+          <td><input type="text" ng-model="customGroupId"></td>
+        </tr>
+        <tr>
+          <td>Date and Time Changed:</td>
+          <td><input type="text" ng-model="dateAndTimeChanged" disabled></td>
+        </tr>
+        <tr>
+          <td>Last Updated By:</td>
+          <td><input type="text" ng-model="lastUpdatedBy" disabled></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button ng-click="save()">Save</button>
+            <button ng-click="delete()">Delete</button>
+            <button ng-click="edit()">Edit</button>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+
+  <script>
+    angular.module('myApp', [])
+      .controller('myCtrl', function($scope, $http) {
+        $scope.customGroupNames = ['Group 1', 'Group 2', 'Group 3'];
+        $scope.customGroupName = [];
+        $scope.customGroupId = '';
+        $scope.dateAndTimeChanged = new Date().toLocaleString();
+        $scope.lastUpdatedBy = 'Default User';
+
+        $scope.save = function() {
+          // Perform save operation
+          var data = {
+            groupName: $scope.customGroupName,
+            groupId: $scope.customGroupId,
+            dateChanged: $scope.dateAndTimeChanged,
+            updatedBy: $scope.lastUpdatedBy
+          };
+
+          $http.post('/api/custom-groups', data)
+            .then(function(response) {
+              console.log('Save successful');
+            }, function(error) {
+              console.error('Save failed');
+            });
+        };
+
+        $scope.delete = function() {
+          // Perform delete operation
+          var groupId = $scope.customGroupId;
+
+          $http.delete('/api/custom-groups/' + groupId)
+            .then(function(response) {
+              console.log('Delete successful');
+            }, function(error) {
+              console.error('Delete failed');
+            });
+        };
+
+        $scope.edit = function() {
+          // Perform edit operation (update only group members)
+          var groupId = $scope.customGroupId;
+          var data = {
+            groupName: $scope.customGroupName
+          };
+
+          $http.put('/api/custom-groups/' + groupId, data)
+            .then(function(response) {
+              console.log('Edit successful');
+            }, function(error) {
+              console.error('Edit failed');
+            });
+        };
+      });
+  </script>
+</body>
+
+</html>
